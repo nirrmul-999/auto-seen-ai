@@ -5,6 +5,7 @@ import type { Monitor, MonitorRun } from '@shared/monitors'
 import { isRunning, runMonitor } from './run'
 
 const MINUTE = 60_000
+const MAX_PARALLEL_MONITORS = 5
 
 /** Whether the timer is set, and whether a check is running, once per process. */
 const scheduler = processWide('scheduler', () => ({ started: false, checking: false }))
@@ -16,7 +17,7 @@ function describeRun(monitor: Monitor, run: MonitorRun): string {
 	return `[monitors] ${displayUrl(monitor.url)} ${result}${alerts}`
 }
 
-/** Runs every monitor that's due, one after another. Returns how many ran. */
+/** Runs every monitor that's due, up to a small parallel batch. Returns how many ran. */
 export async function runDueMonitors(now = new Date()): Promise<number> {
 	if (scheduler.checking) return 0
 	scheduler.checking = true
@@ -25,13 +26,24 @@ export async function runDueMonitors(now = new Date()): Promise<number> {
 		const due = (await listMonitors()).filter(
 			(m) => !m.paused && new Date(m.nextRunAt) <= now && !isRunning(m.id)
 		)
-		for (const monitor of due) {
-			try {
-				const run = await runMonitor(monitor.id)
-				if (run) console.log(describeRun(monitor, run))
-				ran++
-			} catch (e) {
-				console.error(`[monitors] ${displayUrl(monitor.url)}: ${(e as Error).message}`)
+		const batches: Monitor[][] = []
+		for (let i = 0; i < due.length; i += MAX_PARALLEL_MONITORS) {
+			batches.push(due.slice(i, i + MAX_PARALLEL_MONITORS))
+		}
+		for (const batch of batches) {
+			const results = await Promise.allSettled(
+				batch.map(async (monitor) => {
+					const run = await runMonitor(monitor.id)
+					if (run) console.log(describeRun(monitor, run))
+					return run
+				})
+			)
+			ran += results.filter((r) => r.status === 'fulfilled').length
+			for (const result of results) {
+				if (result.status === 'rejected') {
+					const error = result.reason as Error
+					console.error(`[monitors] ${error.message}`)
+				}
 			}
 		}
 	} finally {
