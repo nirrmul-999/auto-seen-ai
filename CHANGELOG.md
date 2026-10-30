@@ -2,6 +2,18 @@
 
 All notable changes to OpenSEO. Versions follow [Semantic Versioning](https://semver.org).
 
+## [0.4.0](https://github.com/nirrmul-999/auto-seen-ai/compare/v0.3.0...v0.4.0) (2026-10-30)
+
+
+### Features
+
+* add a github action that checks preview deploys ([#16](https://github.com/nirrmul-999/auto-seen-ai/issues/16)) ([4815651](https://github.com/nirrmul-999/auto-seen-ai/commit/48156511bed45fef90ae5a8e28657d42c48c211a))
+* add a Telegram link preview ([#19](https://github.com/nirrmul-999/auto-seen-ai/issues/19)) ([365ee81](https://github.com/nirrmul-999/auto-seen-ai/commit/365ee818385900b5a0727dfcb6b18cc394239851))
+* add an mcp server ([#17](https://github.com/nirrmul-999/auto-seen-ai/issues/17)) ([a88a1ec](https://github.com/nirrmul-999/auto-seen-ai/commit/a88a1ec41c914c74a2a62ac83167c3ce8b8ffa75))
+* compare two audits ([#14](https://github.com/nirrmul-999/auto-seen-ai/issues/14)) ([8d98ba1](https://github.com/nirrmul-999/auto-seen-ai/commit/8d98ba170185905e30cdaefbaa62b189a5510f36))
+* monitor pages and send alerts ([#15](https://github.com/nirrmul-999/auto-seen-ai/issues/15)) ([b947508](https://github.com/nirrmul-999/auto-seen-ai/commit/b947508d423f578822b4e58d44e778275291849d))
+* publish a docker image and add a demo to the readme ([#4](https://github.com/nirrmul-999/auto-seen-ai/issues/4)) ([06fa6e1](https://github.com/nirrmul-999/auto-seen-ai/commit/06fa6e1177d4f85bb896fa59ee9577676230d733))
+
 ## [0.3.0](https://github.com/alexsilver8/open-seo/compare/v0.2.0...v0.3.0) (2026-10-11)
 
 ### Compare two audits
